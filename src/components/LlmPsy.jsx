@@ -1,87 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import Panel from './Panel';
 
-const OLLAMA_HOST = '/ollama';
-const OLLAMA_MODEL = 'gemma3:4b';
-
-function LocalMarkdown({ content = '' }) {
-  if (!content) return null;
-
-  const parseInline = (text) => {
-    const parts = text.split(/(\*\*.*?\*\*)/g);
-    return parts.map((part, idx) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={idx}>{part.slice(2, -2)}</strong>;
-      }
-      return part;
-    });
-  };
-
-  const lines = content.split('\n');
-  const elements = [];
-  let currentList = [];
-
-  const flushList = () => {
-    if (currentList.length > 0) {
-      elements.push(
-        <ul key={`list-${elements.length}`} style={{ margin: '4px 0', paddingLeft: '18px' }}>
-          {currentList.map((item, idx) => (
-            <li key={idx} style={{ marginBottom: '2px' }}>{parseInline(item)}</li>
-          ))}
-        </ul>
-      );
-      currentList = [];
-    }
-  };
-
-  lines.forEach((line, index) => {
-    const trimmed = line.trim();
-
-    if (!trimmed) {
-      flushList();
-      return;
-    }
-
-    if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
-      currentList.push(trimmed.slice(2));
-      return;
-    }
-
-    flushList();
-
-    const isSectionHeader =
-      /^[0-9]+\.\s+/.test(trimmed) ||
-      (trimmed.startsWith('**') && trimmed.endsWith('**') && trimmed.length < 80);
-
-    if (isSectionHeader) {
-      const cleanHeader = trimmed.replace(/^\*\*/, '').replace(/\*\*$/, '');
-      elements.push(
-        <h4 key={`header-${index}`} style={{ margin: '8px 0 4px 0', fontSize: '0.95rem' }}>
-          {cleanHeader}
-        </h4>
-      );
-    } else {
-      elements.push(
-        <p key={`p-${index}`} style={{ margin: '3px 0' }}>
-          {parseInline(trimmed)}
-        </p>
-      );
-    }
-  });
-
-  flushList();
-
-  return <div className="psy-md-content">{elements}</div>;
-}
-
-const SYSTEM_PROMPT = `Tu es EPSHEAL-PSY, l'IA médicale et de soutien psychologique embarquée à bord du vaisseau spatial Arès-Voyageur.
-Règles :
-- Tu veilles sur la santé mentale, cognitive et physique de l'équipage.
-- Sois concis, calme, empathique et médicalement rigoureux.
-- Tu disposes des données télémétriques et antécédents du membre d'équipage qui te consulte.
-- PROTOCOLE D'URGENCE ABSOLUE : Si l'astronaute présente ou décrit un risque vital imminent (infarctus, AVC, détresse psychologique aiguë/psychose, hypoxie, hémorragie, perte de connaissance), commence IMPÉRATIVEMENT ta réponse par la balise exacte : [URGENCE_CRITIQUE]. Donne ensuite l'action de premier secours immédiate.`;
-
-function LlmPsy({ patientActuel = null, onUrgenceDeclenchee }) {
+// Chat fonctionnel côté interface : les messages s'accumulent dans l'état
+// local. L'appel réel à l'API IA sera branché plus tard, en remplaçant
+// handleSend par un fetch/stream vers le backend au lieu du echo actuel.
+function LlmPsy() {
   const [messages, setMessages] = useState([
     {
       from: 'ia',
@@ -198,48 +121,34 @@ function LlmPsy({ patientActuel = null, onUrgenceDeclenchee }) {
     }
   };
 
+  if (view === 'closed') {
+    return (
+      <button className="psy-launcher" onClick={() => setView('open')}>
+        PSYCHO3000
+      </button>
+    );
+  }
+
   return (
-    <Panel
-      title="LLM PSY"
-      badge={isAlertActive ? 'URGENCE' : 'Veille'}
-      badgeType={isAlertActive ? 'danger' : 'ok'}
-    >
+    <Panel title="LLM PSY" badge="Veille" badgeType="ok">
       <div className="psy-thread">
         {messages.map((m, i) => (
-          <div
-            key={i}
-            className={`psy-bubble psy-bubble-${m.from} ${
-              m.isUrgent ? 'psy-bubble-urgent' : ''
-            }`}
-          >
-            {/* Rendu Markdown autonome local */}
-            <LocalMarkdown content={m.text} />
+          <div key={i} className={`psy-bubble psy-bubble-${m.from}`}>
+            {m.text}
           </div>
         ))}
-        {loading && (
-          <div className="psy-bubble psy-bubble-ia psy-typing">
-            EPSHEAL analyse les constantes...
-          </div>
-        )}
-        <div ref={threadEndRef} />
       </div>
-
       <div className="psy-input-row">
         <textarea
           className="psy-input"
-          placeholder="Rapporter un état, un symptôme ou une alerte..."
+          placeholder="Écrire un message…"
           rows={2}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={handleKeyDown}
-          disabled={loading}
         />
-        <button
-          className="psy-send"
-          onClick={handleSend}
-          disabled={!draft.trim() || loading}
-        >
-          {loading ? '...' : 'Envoyer'}
+        <button className="psy-send" onClick={handleSend} disabled={!draft.trim()}>
+          Envoyer
         </button>
       </div>
     </Panel>

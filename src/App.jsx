@@ -9,8 +9,6 @@ import LlmPsy from './components/LlmPsy';
 import ToWatch from './components/ToWatch';
 import SleepCycle from './components/SleepCycle';
 
-// Données de démonstration. À terme, cet état sera alimenté par
-// l'API IA / le capteur cardiaque temps réel plutôt que codé en dur ici.
 function App() {
   const [mission] = useState({
     name: 'ARES-VOYAGEUR',
@@ -62,11 +60,14 @@ function App() {
         </section>
 
         <section className="col">
-          <LlmPsy />
           <ToWatch alerts={alerts} logEntries={logEntries} />
           <SleepCycle nights={sleepNights} average="6h48" target="7h00" />
         </section>
       </main>
+
+      <div className="psy-popup">
+        <LlmPsy />
+      </div>
     </div>
   );
 }
