@@ -38,3 +38,52 @@ body {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }
+
+
+/* Conteneur des réponses formattées */
+.psy-md-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  line-height: 1.45;
+}
+
+.psy-md-p {
+  margin: 0;
+}
+
+/* Titres de sections (1. Données biométriques, etc.) */
+.psy-md-header {
+  margin: 8px 0 3px 0;
+  font-size: 0.95rem;
+  color: #00e5ff;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+  padding-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Listes à puces indentées */
+.psy-md-list {
+  margin: 2px 0 6px 0;
+  padding-left: 18px;
+  list-style-type: disc;
+}
+
+.psy-md-list li {
+  margin-bottom: 3px;
+}
+
+.psy-md-container strong {
+  color: #7df9ff;
+  font-weight: 600;
+}
+
+.psy-bubble-urgent .psy-md-header {
+  color: #ff4d4f;
+  border-bottom-color: rgba(255, 77, 79, 0.4);
+}
+
+.psy-bubble-urgent strong {
+  color: #ff7875;
+}
