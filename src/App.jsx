@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './styles/dashboard.css';
+import Login from './components/login';
 import TopBar from './components/TopBar';
 import IdentityCard from './components/IdentityCard';
 import MedicalHistory from './components/MedicalHistory';
@@ -10,6 +11,8 @@ import ToWatch from './components/ToWatch';
 import SleepCycle from './components/SleepCycle';
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+
   const [mission] = useState({
     name: 'ARES-VOYAGEUR',
     destination: 'PROXIMA b',
@@ -18,7 +21,6 @@ function App() {
   });
 
   const [crew] = useState({
-    name: 'Cne Léa Cassini',
     crewId: '7714-B',
     cryoBay: 3,
     departureDate: '11 mars 2080',
@@ -44,13 +46,22 @@ function App() {
     { time: 'Sol 210 · 14:30', text: 'Ajustement du programme de contre-mesure osseuse.' },
   ]);
 
+  if (!currentUser) {
+    return <Login onLogin={setCurrentUser} />;
+  }
+
   return (
     <div className="app">
       <TopBar missionName={mission.name} destination={mission.destination} sol={mission.sol} online={mission.online} />
 
       <main className="grid">
         <section className="col">
-          <IdentityCard name={crew.name} crewId={crew.crewId} cryoBay={crew.cryoBay} departureDate={crew.departureDate} />
+          <IdentityCard
+            name={`${currentUser.firstName} ${currentUser.lastName}`}
+            crewId={crew.crewId}
+            cryoBay={crew.cryoBay}
+            departureDate={crew.departureDate}
+          />
           <MedicalHistory entries={medicalHistory} />
           <HeartActivity rhythmStatus="Rythme sinusal" variability="42 ms" lastIrregularEpisode="aucun" />
         </section>
