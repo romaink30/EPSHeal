@@ -1,11 +1,37 @@
+import { useState } from 'react';
 import Panel from './Panel';
 
-// Interface pour l'instant statique : l'appel à l'API IA sera branché
-// ici plus tard (remplacer les messages par un état + un fetch/stream).
+// Chat fonctionnel côté interface : les messages s'accumulent dans l'état
+// local. L'appel réel à l'API IA sera branché plus tard, en remplaçant
+// handleSend par un fetch/stream vers le backend au lieu du echo actuel.
 function LlmPsy() {
-  const messages = [
+  const [messages, setMessages] = useState([
     { from: 'ia', text: "Bonjour Léa. Comment te sens-tu aujourd'hui ?" },
-  ];
+  ]);
+  const [draft, setDraft] = useState('');
+
+  const handleSend = () => {
+    const text = draft.trim();
+    if (!text) return;
+
+    setMessages((prev) => [...prev, { from: 'user', text }]);
+    setDraft('');
+
+    // Réponse temporaire, à remplacer par l'appel API réel.
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        { from: 'ia', text: 'Message bien reçu. (réponse IA à connecter)' },
+      ]);
+    }, 400);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
   return (
     <Panel title="LLM PSY" badge="Veille" badgeType="ok">
@@ -17,8 +43,15 @@ function LlmPsy() {
         ))}
       </div>
       <div className="psy-input-row">
-        <input className="psy-input" type="text" placeholder="Écrire un message…" disabled />
-        <button className="psy-send" disabled>
+        <textarea
+          className="psy-input"
+          placeholder="Écrire un message…"
+          rows={2}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <button className="psy-send" onClick={handleSend} disabled={!draft.trim()}>
           Envoyer
         </button>
       </div>

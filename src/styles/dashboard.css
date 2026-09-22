@@ -404,6 +404,7 @@
 .psy-input-row {
   display: flex;
   gap: 8px;
+  align-items: flex-end;
 }
 .psy-input {
   flex: 1;
@@ -414,6 +415,7 @@
   font-family: var(--font-sans);
   font-size: 12.5px;
   padding: 7px 10px;
+  resize: none;
 }
 .psy-input::placeholder {
   color: var(--text-dim);
