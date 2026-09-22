@@ -519,9 +519,6 @@
   cursor: not-allowed;
   opacity: 0.5;
 }
-<<<<<<< HEAD
-
-=======
 /* ---------- Page de connexion ---------- */
 .login-screen {
   min-height: 100vh;
@@ -634,4 +631,21 @@
 .login-submit:hover {
   background: rgba(0, 229, 255, 0.2);
 }
->>>>>>> ff6d477d5ca8bb94276a6ed4e986bd1148b875f0
+
+/* ---------- Scanner QR (utilisé dans Login.jsx) ---------- */
+.qr-video-box {
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  overflow: hidden;
+  min-height: 220px;
+  background: #000;
+}
+.qr-video-box video {
+  width: 100%;
+  display: block;
+}
+
+.qr-hint {
+  margin-top: 10px;
+  text-align: center; 
+}
