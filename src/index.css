@@ -1,0 +1,40 @@
+:root {
+  --bg: #060b14;
+  --panel: rgba(13, 27, 42, 0.55);
+  --panel-border: rgba(0, 229, 255, 0.28);
+  --cyan: #00e5ff;
+  --cyan-dim: #4a8fa3;
+  --text: #d6ecf3;
+  --text-dim: #6e93a6;
+  --ok: #3ddc97;
+  --warn: #ffb020;
+  --crit: #ff4d5e;
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Sora', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(0, 229, 255, 0.08), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 100% 100%, rgba(0, 229, 255, 0.05), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
