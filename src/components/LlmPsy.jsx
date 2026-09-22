@@ -1,10 +1,7 @@
 import { useState } from 'react';
-import Panel from './Panel';
 
-// Chat fonctionnel côté interface : les messages s'accumulent dans l'état
-// local. L'appel réel à l'API IA sera branché plus tard, en remplaçant
-// handleSend par un fetch/stream vers le backend au lieu du echo actuel.
 function LlmPsy() {
+  const [view, setView] = useState('open'); // 'open' | 'minimized' | 'closed'
   const [messages, setMessages] = useState([
     { from: 'ia', text: "Bonjour Léa. Comment te sens-tu aujourd'hui ?" },
   ]);
@@ -33,29 +30,58 @@ function LlmPsy() {
     }
   };
 
+  if (view === 'closed') {
+    return (
+      <button className="psy-launcher" onClick={() => setView('open')}>
+        PSYCHO3000
+      </button>
+    );
+  }
+
   return (
-    <Panel title="LLM PSY" badge="Veille" badgeType="ok">
-      <div className="psy-thread">
-        {messages.map((m, i) => (
-          <div key={i} className={`psy-bubble psy-bubble-${m.from}`}>
-            {m.text}
+    <div className="psy-window">
+      <div className="psy-window-head">
+        <span className="psy-window-title">PSYCHO3000</span>
+        <span className="badge ok">Veille</span>
+        <div className="psy-window-actions">
+          <button
+            className="psy-icon-btn"
+            title={view === 'minimized' ? 'Agrandir' : 'Réduire'}
+            onClick={() => setView(view === 'minimized' ? 'open' : 'minimized')}
+          >
+            {view === 'minimized' ? '▢' : '–'}
+          </button>
+          <button className="psy-icon-btn" title="Fermer" onClick={() => setView('closed')}>
+            ×
+          </button>
+        </div>
+      </div>
+
+      {view === 'open' && (
+        <>
+          <div className="psy-thread">
+            {messages.map((m, i) => (
+              <div key={i} className={`psy-bubble psy-bubble-${m.from}`}>
+                {m.text}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="psy-input-row">
-        <textarea
-          className="psy-input"
-          placeholder="Écrire un message…"
-          rows={2}
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <button className="psy-send" onClick={handleSend} disabled={!draft.trim()}>
-          Envoyer
-        </button>
-      </div>
-    </Panel>
+          <div className="psy-input-row">
+            <textarea
+              className="psy-input"
+              placeholder="Écrire un message…"
+              rows={2}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <button className="psy-send" onClick={handleSend} disabled={!draft.trim()}>
+              Envoyer
+            </button>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 

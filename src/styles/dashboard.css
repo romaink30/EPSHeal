@@ -381,12 +381,90 @@
 }
 
 /* ---------- LLM PSY chat ---------- */
+/* ---------- Fenêtre flottante LLM PSY (haut à droite) ---------- */
+.psy-popup {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  z-index: 100;
+}
+
+@media (max-width: 640px) {
+  .psy-popup {
+    left: 16px;
+    right: 16px;
+    top: 16px;
+    width: auto;
+  }
+}
+
+.psy-window {
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+  border-radius: 4px;
+  padding: 14px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 229, 255, 0.15);
+}
+
+.psy-window-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.psy-window-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+}
+.psy-window-actions {
+  display: flex;
+  gap: 4px;
+}
+.psy-icon-btn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  color: var(--cyan);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+.psy-icon-btn:hover {
+  background: rgba(0, 229, 255, 0.18);
+}
+
+.psy-launcher {
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  padding: 10px 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 229, 255, 0.15);
+  cursor: pointer;
+}
+
 .psy-thread {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 12px;
-  min-height: 60px;
+  max-height: 180px;
+  overflow-y: auto;
 }
 .psy-bubble {
   font-size: 12.5px;
@@ -401,10 +479,16 @@
   color: var(--text);
   align-self: flex-start;
 }
+.psy-bubble-user {
+  background: rgba(0, 229, 255, 0.18);
+  border: 1px solid var(--cyan-dim);
+  color: var(--text);
+  align-self: flex-end;
+}
 .psy-input-row {
   display: flex;
-  gap: 8px;
   align-items: flex-end;
+  gap: 8px;
 }
 .psy-input {
   flex: 1;
@@ -428,6 +512,10 @@
   font-family: var(--font-sans);
   font-size: 12px;
   padding: 0 14px;
-  cursor: not-allowed;
+  height: 34px;
+  cursor: pointer;
 }
-
+.psy-send:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
