@@ -5,7 +5,7 @@ function Panel({ title, badge, badgeType = 'ok', footer, children }) {
         <h2>{title}</h2>
         {badge && <span className={`badge ${badgeType}`}>{badge}</span>}
       </div>
-      {children}
+      <div className="panel-body">{children}</div>
       {footer && <div className="panel-foot">{footer}</div>}
     </div>
   );

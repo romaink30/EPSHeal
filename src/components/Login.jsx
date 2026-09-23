@@ -1,24 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 
-// Base de correspondance de démonstration : ID de badge -> identité.
-// À remplacer plus tard par une vraie recherche en base de données /
-// API backend.
 const CREW_DIRECTORY = {
   '7714-B': { firstName: 'Léa', lastName: 'Cassini' },
 };
 
-// La caméra ne s'active qu'après un clic sur "Commencer le scan de la
-// puce" (le navigateur ne peut de toute façon pas démarrer la caméra
-// sans un premier geste de l'utilisateur, mais c'est aussi plus clair
-// niveau UX). Dès qu'un QR code reconnu est scanné, onLogin est appelé
-// directement avec l'identité correspondante.
+// Profil utilisé pour le contournement en phase de dev
+const DEV_USER = { firstName: 'Léa', lastName: 'Cassini' };
+
 function Login({ onLogin }) {
   const containerId = 'qr-scanner-view';
   const scannerRef = useRef(null);
   const hasScannedRef = useRef(false);
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState('');
+
+  // Gestion du bypass dev
+  const handleBypass = () => {
+    if (scannerRef.current && scanning) {
+      scannerRef.current.stop().catch(() => {});
+    }
+    onLogin(DEV_USER);
+  };
 
   useEffect(() => {
     if (!scanning) return;
@@ -45,10 +48,7 @@ function Login({ onLogin }) {
           setError('');
           onLogin(match);
         },
-        () => {
-          // erreurs de décodage image par image, ignorées (normal tant
-          // qu'aucun QR code n'est dans le cadre)
-        }
+        () => {}
       )
       .catch((err) => {
         console.error('Impossible d’accéder à la caméra :', err);
@@ -81,6 +81,24 @@ function Login({ onLogin }) {
             Commencer le scan de la puce
           </button>
         )}
+
+        {/* Bouton de bypass temporaire */}
+        <button
+          type="button"
+          onClick={handleBypass}
+          style={{
+            marginTop: '1rem',
+            background: 'none',
+            border: '1px dashed #666',
+            color: '#aaa',
+            padding: '8px 14px',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '0.85rem'
+          }}
+        >
+          Connexion rapide (Dev Bypass)
+        </button>
 
         {error && <div className="login-error">{error}</div>}
 

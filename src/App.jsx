@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './styles/dashboard.css';
-import Login from './components/login';
+import Login from './components/Login';
 import TopBar from './components/TopBar';
 import IdentityCard from './components/IdentityCard';
 import MedicalHistory from './components/MedicalHistory';
@@ -50,9 +50,35 @@ function App() {
     return <Login onLogin={setCurrentUser} />;
   }
 
+  // Fusion de l'utilisateur connecté avec les données de bord
+  const patientData = {
+    id: crew.crewId,
+    prenom: currentUser.firstName,
+    nom: currentUser.lastName,
+    grade: currentUser.grade || 'Dr.',
+    role: currentUser.role || 'Spécialiste de mission',
+    statut: 'stable',
+    constantes: {
+      pouls: 72,
+      rythme: 'Sinusal',
+      spo2: '98%',
+      tension: '12/8',
+      cerveau: 'Alpha (Calme)',
+    },
+    antecedents: medicalHistory.join(' '),
+    allergies: 'Aucune allergie connue.',
+    observations: 'Densité osseuse en légère baisse.',
+    notesPsy: 'Paramètres psychologiques stables.',
+  };
+
   return (
     <div className="app">
-      <TopBar missionName={mission.name} destination={mission.destination} sol={mission.sol} online={mission.online} />
+      <TopBar
+        missionName={mission.name}
+        destination={mission.destination}
+        sol={mission.sol}
+        online={mission.online}
+      />
 
       <main className="grid">
         <section className="col">
@@ -63,7 +89,11 @@ function App() {
             departureDate={crew.departureDate}
           />
           <MedicalHistory entries={medicalHistory} />
-          <HeartActivity rhythmStatus="Rythme sinusal" variability="42 ms" lastIrregularEpisode="aucun" />
+          <HeartActivity
+            rhythmStatus="Rythme sinusal"
+            variability="42 ms"
+            lastIrregularEpisode="aucun"
+          />
         </section>
 
         <section className="col" style={{ display: 'flex' }}>
@@ -71,14 +101,11 @@ function App() {
         </section>
 
         <section className="col">
+          <LlmPsy patientActuel={patientData} />
           <ToWatch alerts={alerts} logEntries={logEntries} />
           <SleepCycle nights={sleepNights} average="6h48" target="7h00" />
         </section>
       </main>
-
-      <div className="psy-popup">
-        <LlmPsy />
-      </div>
     </div>
   );
 }
