@@ -47,20 +47,31 @@ function App() {
     { time: 'Sol 210 · 14:30', text: 'Ajustement du programme de contre-mesure osseuse.' },
   ]);
 
+  const handleLogout = () => {
+    setCurrentUser(null);
+  };
+
   if (!currentUser) {
     return <Login onLogin={setCurrentUser} />;
   }
 
-  if (currentUser.role === 'doctor') {
+  // Vue Médecin
+  if (currentUser.role === 'doctor' || currentUser.role === 'medecin') {
     return (
       <div className="app">
-        <TopBar missionName={mission.name} destination={mission.destination} sol={mission.sol} online={mission.online} />
+        <TopBar
+          missionName={mission.name}
+          destination={mission.destination}
+          sol={mission.sol}
+          online={mission.online}
+          onLogout={handleLogout}
+        />
         <DoctorDashboard currentUser={currentUser} />
       </div>
     );
   }
 
-  // Résolution prioritaire des données selon l'utilisateur scanné (P001, 7714-B, etc.)
+  // Vue Patient
   const activeId = currentUser.id || currentUser.crewId || crew.crewId;
   const firstName = currentUser.firstName || currentUser.prenom || 'Équipage';
   const lastName = currentUser.lastName || currentUser.nom || activeId;
@@ -69,7 +80,6 @@ function App() {
   const role = currentUser.role || 'Spécialiste de mission';
   const grade = currentUser.grade || '';
 
-  // Objet transmis au module LLM
   const patientData = {
     id: activeId,
     prenom: firstName,
@@ -97,6 +107,7 @@ function App() {
         destination={mission.destination}
         sol={mission.sol}
         online={mission.online}
+        onLogout={handleLogout}
       />
 
       <main className="grid">
