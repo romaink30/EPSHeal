@@ -4,6 +4,7 @@
   padding: 20px;
 }
 
+
 /* ---------- Header ---------- */
 .topbar {
   display: flex;
@@ -18,6 +19,7 @@
   gap: 10px;
 }
 
+
 .brand {
   font-family: var(--font-mono);
   font-size: 18px;
@@ -28,12 +30,14 @@
   color: var(--cyan);
 }
 
+
 .mission-info {
   font-family: var(--font-mono);
   font-size: 12.5px;
   color: var(--cyan-dim);
   letter-spacing: 0.5px;
 }
+
 
 .status {
   display: flex;
@@ -50,6 +54,7 @@
   background: var(--ok);
   box-shadow: 0 0 8px var(--ok);
 }
+
 
 /* ---------- Crew strip ---------- */
 .crew-strip {
@@ -70,6 +75,7 @@
   color: var(--text-dim);
 }
 
+
 /* ---------- Layout grid ---------- */
 .grid {
   display: grid;
@@ -78,11 +84,13 @@
   margin-bottom: 14px;
 }
 
+
 .col {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
+
 
 /* ---------- Panels ---------- */
 .panel {
@@ -116,6 +124,7 @@
   opacity: 0.7;
 }
 
+
 .panel-head {
   display: flex;
   align-items: center;
@@ -128,6 +137,7 @@
   margin: 0;
   color: var(--text);
 }
+
 
 .badge {
   font-family: var(--font-mono);
@@ -149,12 +159,14 @@
   background: rgba(255, 77, 94, 0.12);
 }
 
+
 .panel-foot {
   margin-top: 8px;
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-dim);
 }
+
 
 /* ---------- Waveforms ---------- */
 .wave {
@@ -168,6 +180,7 @@
   stroke-width: 1.6;
   filter: drop-shadow(0 0 3px rgba(0, 229, 255, 0.6));
 }
+
 
 /* ---------- Sleep bars ---------- */
 .sleep-bars {
@@ -184,6 +197,7 @@
   font-style: normal;
 }
 
+
 /* ---------- Center figure ---------- */
 .figure-panel {
   border: 1px solid var(--panel-border);
@@ -199,6 +213,7 @@
   min-height: 420px;
 }
 
+
 .figure-wrap {
   position: relative;
   width: 220px;
@@ -207,6 +222,7 @@
   width: 100%;
   height: auto;
 }
+
 
 .figure-body {
   fill: none;
@@ -217,6 +233,7 @@
   fill: var(--cyan);
   filter: drop-shadow(0 0 4px var(--cyan));
 }
+
 
 .figure-readout {
   text-align: center;
@@ -238,6 +255,7 @@
   margin-top: 2px;
 }
 
+
 .crew-id {
   margin-top: 18px;
   font-family: var(--font-mono);
@@ -246,7 +264,7 @@
   text-align: center;
 }
 
-/* ---------- Vitals list ---------- */
+
 .vitals-list {
   list-style: none;
   margin: 0;
@@ -272,7 +290,7 @@
   font-weight: 700;
 }
 
-/* ---------- Gauges ---------- */
+
 .gauge-track {
   width: 100%;
   height: 8px;
@@ -289,12 +307,13 @@
   background: linear-gradient(90deg, #a87418, var(--warn));
 }
 
-/* ---------- Bottom grid ---------- */
+
 .bottom-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 14px;
 }
+
 
 .log ul,
 .alerts ul {
@@ -321,6 +340,7 @@
   width: 100px;
 }
 
+
 .alerts li {
   padding: 8px 10px;
   border-radius: 3px;
@@ -341,8 +361,6 @@
   background: rgba(61, 220, 151, 0.08);
   color: var(--ok);
 }
-
-/* ---------- Responsive ---------- */
 @media (max-width: 980px) {
   .grid {
     grid-template-columns: 1fr;
@@ -354,8 +372,6 @@
     grid-template-columns: 1fr;
   }
 }
-
-/* ---------- Skeleton detail readout ---------- */
 .skeleton-detail {
   margin-top: 16px;
   width: 100%;
@@ -380,25 +396,6 @@
   font-style: italic;
 }
 
-/* ---------- LLM PSY chat ---------- */
-/* ---------- Fenêtre flottante LLM PSY (haut à droite) ---------- */
-.psy-popup {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  width: 320px;
-  max-width: calc(100vw - 32px);
-  z-index: 100;
-}
-
-@media (max-width: 640px) {
-  .psy-popup {
-    left: 16px;
-    right: 16px;
-    top: 16px;
-    width: auto;
-  }
-}
 
 .psy-window {
   border: 1px solid var(--panel-border);
@@ -408,6 +405,7 @@
   backdrop-filter: blur(6px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 229, 255, 0.15);
 }
+
 
 .psy-window-head {
   display: flex;
@@ -444,6 +442,7 @@
   background: rgba(0, 229, 255, 0.18);
 }
 
+
 .psy-launcher {
   border: 1px solid var(--panel-border);
   background: var(--panel);
@@ -457,6 +456,7 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 229, 255, 0.15);
   cursor: pointer;
 }
+
 
 .psy-thread {
   display: flex;
@@ -528,6 +528,7 @@
   padding: 20px;
 }
 
+
 .login-card {
   width: 100%;
   max-width: 360px;
@@ -560,6 +561,7 @@
   border-right: 2px solid var(--cyan);
 }
 
+
 .login-brand {
   font-family: var(--font-mono);
   font-size: 22px;
@@ -571,6 +573,7 @@
   color: var(--cyan);
 }
 
+
 .login-subtitle {
   text-align: center;
   font-family: var(--font-mono);
@@ -579,6 +582,7 @@
   margin: 6px 0 26px;
   letter-spacing: 0.3px;
 }
+
 
 .login-field {
   display: block;
@@ -605,6 +609,7 @@
   outline-offset: 1px;
 }
 
+
 .login-error {
   font-family: var(--font-mono);
   font-size: 11.5px;
@@ -614,6 +619,7 @@
   padding: 8px 10px;
   margin-bottom: 16px;
 }
+
 
 .login-submit {
   width: 100%;
@@ -632,6 +638,7 @@
   background: rgba(0, 229, 255, 0.2);
 }
 
+
 /* ---------- Scanner QR (utilisé dans Login.jsx) ---------- */
 .qr-video-box {
   border: 1px solid var(--panel-border);
@@ -645,7 +652,311 @@
   display: block;
 }
 
+
 .qr-hint {
   margin-top: 10px;
-  text-align: center; 
+  text-align: center;
+}
+
+
+/* Aperçu dans le Panel */
+.psy-card-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 12px;
+}
+
+
+.psy-preview-text {
+  font-size: 0.8rem;
+  color: #7ab3cc;
+  line-height: 1.4;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+
+.psy-open-btn {
+  background: rgba(0, 235, 255, 0.08);
+  border: 1px solid #00ebff;
+  color: #00ebff;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+.psy-open-btn:hover {
+  background: #00ebff;
+  color: #020b14;
+  box-shadow: 0 0 10px rgba(0, 235, 255, 0.4);
+}
+
+
+/* Modale plein écran */
+.psy-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(1, 8, 16, 0.85);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+
+.psy-modal-content {
+  width: 90%;
+  max-width: 650px;
+  height: 550px;
+  background: #04121e;
+  border: 1px solid #00ebff;
+  box-shadow: 0 0 25px rgba(0, 235, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+
+.psy-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 235, 255, 0.2);
+}
+
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.status-orb {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+
+.status-orb.ok {
+  background: #00ebff;
+  box-shadow: 0 0 6px #00ebff;
+}
+
+
+.status-orb.danger {
+  background: #ff3366;
+  box-shadow: 0 0 6px #ff3366;
+}
+
+
+.header-title {
+  color: #00ebff;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+
+.psy-modal-close {
+  background: transparent;
+  border: none;
+  color: #00ebff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+
+.psy-modal-thread {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+.psy-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+
+.psy-bubble-ia {
+  align-self: flex-start;
+  background: rgba(0, 235, 255, 0.07);
+  border-left: 2px solid #00ebff;
+  color: #d0f0ff;
+}
+
+
+.psy-bubble-user {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.08);
+  border-right: 2px solid #888;
+  color: #ffffff;
+}
+
+
+.bubble-author {
+  display: block;
+  font-size: 0.65rem;
+  color: #00ebff;
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+
+.psy-modal-footer {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(0, 235, 255, 0.2);
+}
+
+
+.psy-modal-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 235, 255, 0.3);
+  color: #fff;
+  padding: 8px 12px;
+  resize: none;
+  font-family: inherit;
+  outline: none;
+}
+
+
+.psy-modal-input:focus {
+  border-color: #00ebff;
+}
+
+
+.psy-modal-send {
+  background: #00ebff;
+  color: #020b14;
+  border: none;
+  padding: 0 16px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+
+.psy-modal-send:disabled {
+  background: #2a4351;
+  color: #557585;
+  cursor: not-allowed;
+}
+
+
+/* Assure l'empilement vertical propre de chaque colonne */
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* ou le gap déjà utilisé dans ton layout */
+}
+
+
+/* Aperçu compact dans le Panel LLM PSY */
+.psy-card-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.psy-preview-text {
+  font-size: 0.8rem;
+  color: #7ab3cc;
+  margin: 0;
+  line-height: 1.35;
+}
+
+
+.psy-open-btn {
+  background: rgba(0, 235, 255, 0.08);
+  border: 1px solid #00ebff;
+  color: #00ebff;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+
+.psy-open-btn:hover {
+  background: #00ebff;
+  color: #020b14;
+  box-shadow: 0 0 10px rgba(0, 235, 255, 0.4);
+}
+
+
+/* 1. La carte d'aperçu s'adapte à sa taille réelle sans déborder */
+.psy-card-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* 2. Le texte ne prend que 2 lignes maximum pour laisser la place au bouton */
+.psy-preview-text {
+  font-size: 0.8rem;
+  color: #7ab3cc;
+  margin: 0;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+/* 3. Le bouton reste strictement dans les bordures du panel */
+.psy-open-btn {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 6px 10px;
+  background: rgba(0, 235, 255, 0.08);
+  border: 1px solid #00ebff;
+  color: #00ebff;
+  font-family: inherit;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+.psy-open-btn:hover {
+  background: #00ebff;
+  color: #020b14;
+  box-shadow: 0 0 10px rgba(0, 235, 255, 0.4);
 }
