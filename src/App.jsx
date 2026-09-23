@@ -58,7 +58,6 @@ function App() {
     return <Login onLogin={setCurrentUser} />;
   }
 
-
   // Fusion de l'utilisateur connecté avec les données de bord
   const patientData = {
     id: crew.crewId,
@@ -80,7 +79,6 @@ function App() {
     notesPsy: 'Paramètres psychologiques stables.',
   };
 
-
   return (
     <div className="app">
       <TopBar
@@ -89,7 +87,6 @@ function App() {
         sol={mission.sol}
         online={mission.online}
       />
-
 
       <main className="grid">
         <section className="col">

@@ -264,7 +264,6 @@
   text-align: center;
 }
 
-
 .vitals-list {
   list-style: none;
   margin: 0;
@@ -290,7 +289,6 @@
   font-weight: 700;
 }
 
-
 .gauge-track {
   width: 100%;
   height: 8px;
@@ -306,7 +304,6 @@
 .gauge-fill.warn {
   background: linear-gradient(90deg, #a87418, var(--warn));
 }
-
 
 .bottom-grid {
   display: grid;
@@ -395,7 +392,6 @@
   color: var(--text-dim);
   font-style: italic;
 }
-
 
 .psy-window {
   border: 1px solid var(--panel-border);
@@ -658,7 +654,6 @@
   text-align: center;
 }
 
-
 /* Aperçu dans le Panel */
 .psy-card-preview {
   display: flex;
@@ -667,7 +662,6 @@
   height: 100%;
   gap: 12px;
 }
-
 
 .psy-preview-text {
   font-size: 0.8rem;
@@ -680,7 +674,6 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
-
 
 .psy-open-btn {
   background: rgba(0, 235, 255, 0.08);
@@ -695,13 +688,11 @@
   transition: all 0.2s ease;
 }
 
-
 .psy-open-btn:hover {
   background: #00ebff;
   color: #020b14;
   box-shadow: 0 0 10px rgba(0, 235, 255, 0.4);
 }
-
 
 /* Modale plein écran */
 .psy-modal-overlay {
@@ -715,7 +706,6 @@
   z-index: 9999;
 }
 
-
 .psy-modal-content {
   width: 90%;
   max-width: 650px;
@@ -727,7 +717,6 @@
   flex-direction: column;
 }
 
-
 .psy-modal-header {
   display: flex;
   justify-content: space-between;
@@ -736,13 +725,11 @@
   border-bottom: 1px solid rgba(0, 235, 255, 0.2);
 }
 
-
 .header-status {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 
 .status-orb {
   width: 8px;
@@ -750,18 +737,15 @@
   border-radius: 50%;
 }
 
-
 .status-orb.ok {
   background: #00ebff;
   box-shadow: 0 0 6px #00ebff;
 }
 
-
 .status-orb.danger {
   background: #ff3366;
   box-shadow: 0 0 6px #ff3366;
 }
-
 
 .header-title {
   color: #00ebff;
@@ -770,7 +754,6 @@
   font-weight: bold;
 }
 
-
 .psy-modal-close {
   background: transparent;
   border: none;
@@ -778,7 +761,6 @@
   font-size: 1.1rem;
   cursor: pointer;
 }
-
 
 .psy-modal-thread {
   flex: 1;
@@ -789,7 +771,6 @@
   gap: 12px;
 }
 
-
 .psy-bubble {
   max-width: 80%;
   padding: 10px 14px;
@@ -798,7 +779,6 @@
   line-height: 1.4;
 }
 
-
 .psy-bubble-ia {
   align-self: flex-start;
   background: rgba(0, 235, 255, 0.07);
@@ -806,14 +786,12 @@
   color: #d0f0ff;
 }
 
-
 .psy-bubble-user {
   align-self: flex-end;
   background: rgba(255, 255, 255, 0.08);
   border-right: 2px solid #888;
   color: #ffffff;
 }
-
 
 .bubble-author {
   display: block;
@@ -823,14 +801,12 @@
   letter-spacing: 1px;
 }
 
-
 .psy-modal-footer {
   display: flex;
   gap: 8px;
   padding: 12px 16px;
   border-top: 1px solid rgba(0, 235, 255, 0.2);
 }
-
 
 .psy-modal-input {
   flex: 1;
@@ -843,11 +819,9 @@
   outline: none;
 }
 
-
 .psy-modal-input:focus {
   border-color: #00ebff;
 }
-
 
 .psy-modal-send {
   background: #00ebff;
@@ -859,13 +833,11 @@
   font-family: inherit;
 }
 
-
 .psy-modal-send:disabled {
   background: #2a4351;
   color: #557585;
   cursor: not-allowed;
 }
-
 
 /* Assure l'empilement vertical propre de chaque colonne */
 .col {
@@ -874,7 +846,6 @@
   gap: 16px; /* ou le gap déjà utilisé dans ton layout */
 }
 
-
 /* Aperçu compact dans le Panel LLM PSY */
 .psy-card-preview {
   display: flex;
@@ -882,14 +853,12 @@
   gap: 10px;
 }
 
-
 .psy-preview-text {
   font-size: 0.8rem;
   color: #7ab3cc;
   margin: 0;
   line-height: 1.35;
 }
-
 
 .psy-open-btn {
   background: rgba(0, 235, 255, 0.08);
@@ -905,13 +874,11 @@
   width: 100%;
 }
 
-
 .psy-open-btn:hover {
   background: #00ebff;
   color: #020b14;
   box-shadow: 0 0 10px rgba(0, 235, 255, 0.4);
 }
-
 
 /* 1. La carte d'aperçu s'adapte à sa taille réelle sans déborder */
 .psy-card-preview {
@@ -922,7 +889,6 @@
   width: 100%;
   box-sizing: border-box;
 }
-
 
 /* 2. Le texte ne prend que 2 lignes maximum pour laisser la place au bouton */
 .psy-preview-text {
@@ -935,7 +901,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
 
 /* 3. Le bouton reste strictement dans les bordures du panel */
 .psy-open-btn {
@@ -953,7 +918,6 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
-
 
 .psy-open-btn:hover {
   background: #00ebff;
