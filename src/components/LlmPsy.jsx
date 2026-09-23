@@ -1,45 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
 import Panel from './Panel';
 
-// Données fictives de secours
-const MOCK_PATIENT = {
-  id: '7714-B',
-  prenom: 'Léa',
-  nom: 'Cassini',
-  grade: 'Dr.',
-  role: 'Spécialiste de mission',
-  statut: 'stable',
-  constantes: {
-    pouls: 72,
-    rythme: 'Sinusal',
-    spo2: '98%',
-    tension: '12/8',
-    cerveau: 'Alpha (Calme)',
-  },
-  antecedents: 'Appendicectomie (2071)',
-  allergies: 'Aucune allergie connue',
-  observations: 'Paramètres biométriques nominaux.',
-  notesPsy: 'État émotionnel stable.',
-};
-
 const OLLAMA_HOST = 'http://localhost:11434';
 const OLLAMA_MODEL = 'gemma3:4b';
 
-// Prompt adapté selon le rôle
-const getSystemPrompt = (role = '') => {
-  const normalizedRole = role.toLowerCase();
-  const isMedecin = normalizedRole.includes('medecin') || normalizedRole.includes('docteur');
-
+// Prompt adapté selon la posture (Médecin vs Patient)
+const getSystemPrompt = (isMedecin = false, nomPatient = '') => {
   if (isMedecin) {
     return `Tu es EPSHEAL-CORE, console d'analyse clinique pour le médecin de bord.
+Tu t'adresses au MÉDECIN qui consulte le dossier de son patient (${nomPatient}).
 Directives :
-- Réponds en français, ton sobre, concis et purement médical (1 à 3 phrases max).
-- Ne récite pas le dossier sans question précise.
-- Sur une salutation simple, réponds poliment sans diagnostic.
-- Utilise la balise [URGENCE_CRITIQUE] uniquement en cas d'anomalie létale.`;
+- Ne t'adresse JAMAIS au patient, mais au médecin traitant.
+- Réponds en français, ton sobre, concis et purement médical (2 à 4 phrases max).
+- Quand le médecin demande le dossier, synthétise clairement les points clés (pathologie, antécédents, constantes) sans faire de copié-collé brut du contexte.
+- Ne récite pas les balises techniques.
+- Utilise la balise [URGENCE_CRITIQUE] uniquement en cas d'anomalie létale immédiate.`;
   }
 
   return `Tu es EPSHEAL-PSY, module de soutien psychologique pour l'équipage spatial.
+Tu t'adresses directement au patient (${nomPatient}) avec écoute et empathie.
 Directives :
 - Réponds en français, ton bienveillant, calme et concis.
 - Si l'utilisateur salue ("bonjour", "salut"), réponds simplement et demande de ses nouvelles, SANS aborder le stress ou les données médicales.
@@ -47,16 +26,28 @@ Directives :
 - Utilise [URGENCE_CRITIQUE] uniquement en cas de risque suicidaire ou mise en péril de la mission.`;
 };
 
-function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
+function LlmPsy({ patientActuel = null, isDoctor = false, onUrgenceDeclenchee }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const isMedecin = (patientActuel?.role || '').toLowerCase().includes('medecin') || 
-                    (patientActuel?.role || '').toLowerCase().includes('docteur');
 
+  // Détection du mode praticien via la prop ou le rôle
+  const isMedecinMode = Boolean(
+    isDoctor ||
+    (patientActuel?.role || '').toLowerCase().includes('medecin') ||
+    (patientActuel?.role || '').toLowerCase().includes('docteur')
+  );
+
+  const getPatientFullName = () => {
+    if (!patientActuel) return 'Inconnu';
+    return `${patientActuel.grade ? `${patientActuel.grade} ` : ''}${patientActuel.prenom || ''} ${patientActuel.nom || ''}`.trim();
+  };
+
+  // Message d'ouverture adapté au rôle connecté
   const getInitialGreeting = () => {
-    if (!patientActuel) return 'Système EPSHEAL en ligne. Comment puis-je vous assister ?';
-    return isMedecin
-      ? `Console EPSHEAL-CORE active. Prêt pour l'évaluation clinique du dossier #${patientActuel.id}.`
-      : `EPSHEAL en ligne. Bonjour ${patientActuel.grade || ''} ${patientActuel.prenom} ${patientActuel.nom}. Comment vous sentez-vous ?`;
+    if (!patientActuel) return 'EPSHEAL en ligne. Aucun dossier actif sélectionné.';
+    const nomPatient = getPatientFullName();
+    return isMedecinMode
+      ? `EPSHEAL en ligne. Vous êtes bien sur le profil de ${nomPatient}.`
+      : `EPSHEAL en ligne. Bonjour ${nomPatient}. Comment vous sentez-vous ?`;
   };
 
   const [messages, setMessages] = useState([
@@ -71,19 +62,17 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
   const [isAlertActive, setIsAlertActive] = useState(patientActuel?.statut === 'urgence');
   const threadEndRef = useRef(null);
 
-  // Synchronisation avec les changements de profil
+  // Mise à jour automatique de l'accueil au changement de patient ou de mode
   useEffect(() => {
-    if (patientActuel) {
-      setMessages([
-        {
-          from: 'ia',
-          text: getInitialGreeting(),
-          isUrgent: patientActuel.statut === 'urgence',
-        },
-      ]);
-      setIsAlertActive(patientActuel.statut === 'urgence');
-    }
-  }, [patientActuel?.id, patientActuel?.role]);
+    setMessages([
+      {
+        from: 'ia',
+        text: getInitialGreeting(),
+        isUrgent: patientActuel?.statut === 'urgence',
+      },
+    ]);
+    setIsAlertActive(patientActuel?.statut === 'urgence');
+  }, [patientActuel?.id, isDoctor]);
 
   // Défilement automatique dans la modale
   useEffect(() => {
@@ -109,20 +98,19 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
     setDraft('');
     setLoading(true);
 
-
     let contexteBiomedical = '';
     if (patientActuel) {
       contexteBiomedical = `
 [DOSSIER DU PATIENT ACTIF]
-- Identité : ${patientActuel.grade || ''} ${patientActuel.prenom} ${patientActuel.nom} (#${patientActuel.id}, Poste: ${patientActuel.role})
-- Statut : ${patientActuel.statut || 'INCONNU'}
+- Identité : ${getPatientFullName()} (#${patientActuel.id || patientActuel.login || 'N/A'}, Poste: ${patientActuel.role || 'Patient'})
+- Pathologie / Rythme cardiaque : ${patientActuel.maladie_rythme_cardiaque || patientActuel.observations || 'Aucune observation enregistrée'}
+- Date diagnostic : ${patientActuel.date_diagnostic || patientActuel.dateDiagnostic || 'N/A'}
 - Constantes : Pouls ${patientActuel.constantes?.pouls || '--'} bpm, SpO2 ${patientActuel.constantes?.spo2 || 'N/A'}, Tension ${patientActuel.constantes?.tension || 'N/A'}
 - Antécédents : ${patientActuel.antecedents || 'Néant'} | Allergies : ${patientActuel.allergies || 'Aucune'}
-- Observations : ${patientActuel.observations || 'Aucune'}
 - Notes psychologiques : ${patientActuel.notesPsy || 'Non renseigné'}`;
     }
 
-    const systemPromptActif = getSystemPrompt(patientActuel?.role);
+    const systemPromptActif = getSystemPrompt(isMedecinMode, getPatientFullName());
 
     const conversationOllama = [
       { role: 'system', content: `${systemPromptActif}\n${contexteBiomedical}` },
@@ -132,7 +120,6 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
       })),
       { role: 'user', content: text },
     ];
-
 
     try {
       const response = await fetch(`${OLLAMA_HOST}/api/chat`, {
@@ -152,12 +139,10 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
       const estUrgent = rawText.includes('[URGENCE_CRITIQUE]');
       const cleanText = rawText.replace(/\[URGENCE_CRITIQUE\]/g, '').trim();
 
-
       if (estUrgent) {
         setIsAlertActive(true);
         if (onUrgenceDeclenchee) onUrgenceDeclenchee(cleanText);
       }
-
 
       setMessages((prev) => [
         ...prev,
@@ -188,7 +173,7 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
   return (
     <>
       <Panel
-        title={isMedecin ? 'ASSISTANCE CLINIQUE' : 'LLM PSY'}
+        title={isMedecinMode ? 'ASSISTANCE CLINIQUE' : 'LLM PSY'}
         badge={isAlertActive ? 'Urgence' : 'Veille'}
         badgeType={isAlertActive ? 'danger' : 'ok'}
       >
@@ -214,7 +199,7 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
               <div className="header-status">
                 <span className={`status-orb ${isAlertActive ? 'danger' : 'ok'}`} />
                 <span className="header-title">
-                  {isMedecin ? 'EPSHEAL-CORE // ANALYSE CLINIQUE' : 'EPSHEAL-PSY // SUIVI ÉQUIPAGE'}
+                  {isMedecinMode ? 'EPSHEAL-CORE // ANALYSE CLINIQUE' : 'EPSHEAL-PSY // SUIVI ÉQUIPAGE'}
                 </span>
               </div>
               <button
@@ -243,7 +228,7 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
             <div className="psy-modal-footer">
               <textarea
                 className="psy-modal-input"
-                placeholder={isMedecin ? 'Poser une question clinique…' : 'Écrire un message…'}
+                placeholder={isMedecinMode ? 'Poser une question clinique sur le dossier…' : 'Écrire un message…'}
                 rows={2}
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
@@ -265,6 +250,5 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
     </>
   );
 }
-
 
 export default LlmPsy;
