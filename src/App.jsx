@@ -125,6 +125,7 @@ function App() {
             rhythmStatus="Rythme sinusal"
             variability="42 ms"
             lastIrregularEpisode="aucun"
+            bpm={patientData.constantes.pouls}
           />
         </section>
 

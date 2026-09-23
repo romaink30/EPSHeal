@@ -65,6 +65,7 @@ function PatientFile({ patientId }) {
             ? `${lastMeasure.frequenceCardiaque} bpm · ${lastMeasure.tensionSystolique}/${lastMeasure.tensionDiastolique} mmHg (${lastMeasure.date})`
             : 'aucune mesure'
         }
+        bpm={lastMeasure?.frequenceCardiaque}
       />
       <Skeleton />
     </div>
