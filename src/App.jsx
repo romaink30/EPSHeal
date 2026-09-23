@@ -9,6 +9,7 @@ import Skeleton from './components/Skeleton';
 import LlmPsy from './components/LlmPsy';
 import ToWatch from './components/ToWatch';
 import SleepCycle from './components/SleepCycle';
+import DoctorDashboard from './components/DoctorDashboard';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -48,6 +49,15 @@ function App() {
 
   if (!currentUser) {
     return <Login onLogin={setCurrentUser} />;
+  }
+
+  if (currentUser.role === 'doctor') {
+    return (
+      <div className="app">
+        <TopBar missionName={mission.name} destination={mission.destination} sol={mission.sol} online={mission.online} />
+        <DoctorDashboard currentUser={currentUser} />
+      </div>
+    );
   }
 
   // Résolution prioritaire des données selon l'utilisateur scanné (P001, 7714-B, etc.)
