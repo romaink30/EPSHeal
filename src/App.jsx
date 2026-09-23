@@ -10,10 +10,8 @@ import LlmPsy from './components/LlmPsy';
 import ToWatch from './components/ToWatch';
 import SleepCycle from './components/SleepCycle';
 
-
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
-
 
   const [mission] = useState({
     name: 'ARES-VOYAGEUR',
@@ -22,13 +20,11 @@ function App() {
     online: true,
   });
 
-
   const [crew] = useState({
     crewId: '7714-B',
     cryoBay: 3,
     departureDate: '11 mars 2080',
   });
-
 
   const [medicalHistory] = useState([
     'Aucune allergie connue.',
@@ -36,15 +32,12 @@ function App() {
     'Vaccination de mission à jour (dernier rappel : sol 4).',
   ]);
 
-
   const [sleepNights] = useState([62, 78, 55, 88, 70, 82, 75]);
-
 
   const [alerts] = useState([
     { level: 'warn', text: 'Densité osseuse en légère baisse — programme renforcé recommandé.' },
     { level: 'ok', text: 'Aucune alerte critique active.' },
   ]);
-
 
   const [logEntries] = useState([
     { time: 'Sol 214 · 06:12', text: 'Contrôle de routine — aucune anomalie détectée.' },
@@ -53,18 +46,26 @@ function App() {
     { time: 'Sol 210 · 14:30', text: 'Ajustement du programme de contre-mesure osseuse.' },
   ]);
 
-
   if (!currentUser) {
     return <Login onLogin={setCurrentUser} />;
   }
 
-  // Fusion de l'utilisateur connecté avec les données de bord
+  // Résolution prioritaire des données selon l'utilisateur scanné (P001, 7714-B, etc.)
+  const activeId = currentUser.id || currentUser.crewId || crew.crewId;
+  const firstName = currentUser.firstName || currentUser.prenom || 'Équipage';
+  const lastName = currentUser.lastName || currentUser.nom || activeId;
+  const cryoBay = currentUser.cryoBay ?? crew.cryoBay;
+  const departureDate = currentUser.departureDate || crew.departureDate;
+  const role = currentUser.role || 'Spécialiste de mission';
+  const grade = currentUser.grade || '';
+
+  // Objet transmis au module LLM
   const patientData = {
-    id: crew.crewId,
-    prenom: currentUser.firstName,
-    nom: currentUser.lastName,
-    grade: currentUser.grade || 'Dr.',
-    role: currentUser.role || 'Spécialiste de mission',
+    id: activeId,
+    prenom: firstName,
+    nom: lastName,
+    grade: grade,
+    role: role,
     statut: 'stable',
     constantes: {
       pouls: 72,
@@ -89,12 +90,14 @@ function App() {
       />
 
       <main className="grid">
+        {/* Colonne gauche */}
         <section className="col">
           <IdentityCard
-            name={`${currentUser.firstName} ${currentUser.lastName}`}
-            crewId={crew.crewId}
-            cryoBay={crew.cryoBay}
-            departureDate={crew.departureDate}
+            name={`${grade ? `${grade} ` : ''}${firstName} ${lastName}`}
+            crewId={activeId}
+            cryoBay={cryoBay}
+            departureDate={departureDate}
+            role={role}
           />
           <MedicalHistory entries={medicalHistory} />
           <HeartActivity
@@ -104,12 +107,12 @@ function App() {
           />
         </section>
 
-
+        {/* Colonne centrale */}
         <section className="col" style={{ display: 'flex' }}>
           <Skeleton />
         </section>
 
-
+        {/* Colonne droite */}
         <section className="col">
           <LlmPsy patientActuel={patientData} />
           <ToWatch alerts={alerts} logEntries={logEntries} />
@@ -119,6 +122,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;
