@@ -10,8 +10,10 @@ import LlmPsy from './components/LlmPsy';
 import ToWatch from './components/ToWatch';
 import SleepCycle from './components/SleepCycle';
 
+
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
+
 
   const [mission] = useState({
     name: 'ARES-VOYAGEUR',
@@ -20,11 +22,13 @@ function App() {
     online: true,
   });
 
+
   const [crew] = useState({
     crewId: '7714-B',
     cryoBay: 3,
     departureDate: '11 mars 2080',
   });
+
 
   const [medicalHistory] = useState([
     'Aucune allergie connue.',
@@ -32,12 +36,15 @@ function App() {
     'Vaccination de mission à jour (dernier rappel : sol 4).',
   ]);
 
+
   const [sleepNights] = useState([62, 78, 55, 88, 70, 82, 75]);
+
 
   const [alerts] = useState([
     { level: 'warn', text: 'Densité osseuse en légère baisse — programme renforcé recommandé.' },
     { level: 'ok', text: 'Aucune alerte critique active.' },
   ]);
+
 
   const [logEntries] = useState([
     { time: 'Sol 214 · 06:12', text: 'Contrôle de routine — aucune anomalie détectée.' },
@@ -45,6 +52,7 @@ function App() {
     { time: 'Sol 212 · 09:05', text: 'Prélèvement sanguin — analyse en cours au laboratoire de bord.' },
     { time: 'Sol 210 · 14:30', text: 'Ajustement du programme de contre-mesure osseuse.' },
   ]);
+
 
   if (!currentUser) {
     return <Login onLogin={setCurrentUser} />;
@@ -96,9 +104,11 @@ function App() {
           />
         </section>
 
+
         <section className="col" style={{ display: 'flex' }}>
           <Skeleton />
         </section>
+
 
         <section className="col">
           <LlmPsy patientActuel={patientData} />
@@ -109,5 +119,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

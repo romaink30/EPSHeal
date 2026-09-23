@@ -109,6 +109,7 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
     setDraft('');
     setLoading(true);
 
+
     let contexteBiomedical = '';
     if (patientActuel) {
       contexteBiomedical = `
@@ -132,6 +133,7 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
       { role: 'user', content: text },
     ];
 
+
     try {
       const response = await fetch(`${OLLAMA_HOST}/api/chat`, {
         method: 'POST',
@@ -150,10 +152,12 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
       const estUrgent = rawText.includes('[URGENCE_CRITIQUE]');
       const cleanText = rawText.replace(/\[URGENCE_CRITIQUE\]/g, '').trim();
 
+
       if (estUrgent) {
         setIsAlertActive(true);
         if (onUrgenceDeclenchee) onUrgenceDeclenchee(cleanText);
       }
+
 
       setMessages((prev) => [
         ...prev,
@@ -261,5 +265,6 @@ function LlmPsy({ patientActuel = MOCK_PATIENT, onUrgenceDeclenchee }) {
     </>
   );
 }
+
 
 export default LlmPsy;

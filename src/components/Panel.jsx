@@ -11,4 +11,5 @@ function Panel({ title, badge, badgeType = 'ok', footer, children }) {
   );
 }
 
+
 export default Panel;

@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
+<<<<<<< HEAD
+import { loginByCode } from '../lib/api';
+
+// La caméra ne s'active qu'après un clic sur "Commencer le scan de la
+// puce". Le texte décodé du QR (le "login" du patient ou du médecin en
+// base) est envoyé à l'API, qui renvoie l'identité correspondante.
+=======
 
 const CREW_DIRECTORY = {
   '7714-B': { firstName: 'Léa', lastName: 'Cassini' },
@@ -8,11 +15,13 @@ const CREW_DIRECTORY = {
 // Profil utilisé pour le contournement en phase de dev
 const DEV_USER = { firstName: 'Léa', lastName: 'Cassini' };
 
+>>>>>>> bec2727cdc3a0c71f1685d8fcd74d365ea8d0d9e
 function Login({ onLogin }) {
   const containerId = 'qr-scanner-view';
   const scannerRef = useRef(null);
   const hasScannedRef = useRef(false);
   const [scanning, setScanning] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [error, setError] = useState('');
 
   // Gestion du bypass dev
@@ -34,19 +43,20 @@ function Login({ onLogin }) {
       .start(
         { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 220, height: 220 } },
-        (decodedText) => {
+        async (decodedText) => {
           if (hasScannedRef.current) return;
           hasScannedRef.current = true;
+          setChecking(true);
 
-          const match = CREW_DIRECTORY[decodedText.trim()];
-          if (!match) {
-            setError('Badge non reconnu.');
+          try {
+            const identity = await loginByCode(decodedText.trim());
+            setError('');
+            onLogin(identity);
+          } catch (err) {
+            setError(err.message || 'Badge non reconnu.');
             hasScannedRef.current = false;
-            return;
+            setChecking(false);
           }
-
-          setError('');
-          onLogin(match);
         },
         () => {}
       )
@@ -82,6 +92,9 @@ function Login({ onLogin }) {
           </button>
         )}
 
+<<<<<<< HEAD
+        {checking && <div className="qr-hint">Vérification du badge…</div>}
+=======
         {/* Bouton de bypass temporaire */}
         <button
           type="button"
@@ -100,9 +113,10 @@ function Login({ onLogin }) {
           Connexion rapide (Dev Bypass)
         </button>
 
+>>>>>>> bec2727cdc3a0c71f1685d8fcd74d365ea8d0d9e
         {error && <div className="login-error">{error}</div>}
 
-        {scanning && <div className="qr-hint">Place le QR code du badge dans le cadre.</div>}
+        {scanning && !checking && <div className="qr-hint">Place le QR code du badge dans le cadre.</div>}
       </div>
     </div>
   );

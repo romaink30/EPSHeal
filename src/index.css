@@ -13,9 +13,11 @@
   --font-sans: 'Sora', sans-serif;
 }
 
+
 * {
   box-sizing: border-box;
 }
+
 
 html,
 body,
@@ -24,6 +26,7 @@ body,
   padding: 0;
   min-height: 100%;
 }
+
 
 body {
   background:
@@ -34,10 +37,13 @@ body {
   font-family: var(--font-sans);
 }
 
+
 :focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }
+
+
 
 
 /* Conteneur des réponses formattées */
@@ -48,9 +54,11 @@ body {
   line-height: 1.45;
 }
 
+
 .psy-md-p {
   margin: 0;
 }
+
 
 /* Titres de sections (1. Données biométriques, etc.) */
 .psy-md-header {
@@ -63,6 +71,7 @@ body {
   letter-spacing: 0.8px;
 }
 
+
 /* Listes à puces indentées */
 .psy-md-list {
   margin: 2px 0 6px 0;
@@ -70,19 +79,23 @@ body {
   list-style-type: disc;
 }
 
+
 .psy-md-list li {
   margin-bottom: 3px;
 }
+
 
 .psy-md-container strong {
   color: #7df9ff;
   font-weight: 600;
 }
 
+
 .psy-bubble-urgent .psy-md-header {
   color: #ff4d4f;
   border-bottom-color: rgba(255, 77, 79, 0.4);
 }
+
 
 .psy-bubble-urgent strong {
   color: #ff7875;
@@ -96,6 +109,7 @@ body {
   gap: 12px;
 }
 
+
 .psy-preview-text {
   font-size: 0.8rem;
   color: #7ab3cc;
@@ -107,6 +121,7 @@ body {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
+
 
 .psy-open-btn {
   background: rgba(0, 235, 255, 0.08);
@@ -121,11 +136,13 @@ body {
   transition: all 0.2s ease;
 }
 
+
 .psy-open-btn:hover {
   background: #00ebff;
   color: #020b14;
   box-shadow: 0 0 10px rgba(0, 235, 255, 0.4);
 }
+
 
 /* Modale plein écran */
 .psy-modal-overlay {
@@ -139,6 +156,7 @@ body {
   z-index: 9999;
 }
 
+
 .psy-modal-content {
   width: 90%;
   max-width: 650px;
@@ -150,6 +168,7 @@ body {
   flex-direction: column;
 }
 
+
 .psy-modal-header {
   display: flex;
   justify-content: space-between;
@@ -158,11 +177,13 @@ body {
   border-bottom: 1px solid rgba(0, 235, 255, 0.2);
 }
 
+
 .header-status {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 
 .status-orb {
   width: 8px;
@@ -170,15 +191,18 @@ body {
   border-radius: 50%;
 }
 
+
 .status-orb.ok {
   background: #00ebff;
   box-shadow: 0 0 6px #00ebff;
 }
 
+
 .status-orb.danger {
   background: #ff3366;
   box-shadow: 0 0 6px #ff3366;
 }
+
 
 .header-title {
   color: #00ebff;
@@ -187,6 +211,7 @@ body {
   font-weight: bold;
 }
 
+
 .psy-modal-close {
   background: transparent;
   border: none;
@@ -194,6 +219,7 @@ body {
   font-size: 1.1rem;
   cursor: pointer;
 }
+
 
 .psy-modal-thread {
   flex: 1;
@@ -204,6 +230,7 @@ body {
   gap: 12px;
 }
 
+
 .psy-bubble {
   max-width: 80%;
   padding: 10px 14px;
@@ -212,6 +239,7 @@ body {
   line-height: 1.4;
 }
 
+
 .psy-bubble-ia {
   align-self: flex-start;
   background: rgba(0, 235, 255, 0.07);
@@ -219,12 +247,14 @@ body {
   color: #d0f0ff;
 }
 
+
 .psy-bubble-user {
   align-self: flex-end;
   background: rgba(255, 255, 255, 0.08);
   border-right: 2px solid #888;
   color: #ffffff;
 }
+
 
 .bubble-author {
   display: block;
@@ -234,12 +264,14 @@ body {
   letter-spacing: 1px;
 }
 
+
 .psy-modal-footer {
   display: flex;
   gap: 8px;
   padding: 12px 16px;
   border-top: 1px solid rgba(0, 235, 255, 0.2);
 }
+
 
 .psy-modal-input {
   flex: 1;
@@ -252,9 +284,11 @@ body {
   outline: none;
 }
 
+
 .psy-modal-input:focus {
   border-color: #00ebff;
 }
+
 
 .psy-modal-send {
   background: #00ebff;
@@ -266,11 +300,13 @@ body {
   font-family: inherit;
 }
 
+
 .psy-modal-send:disabled {
   background: #2a4351;
   color: #557585;
   cursor: not-allowed;
 }
+
 
 /* Assure l'empilement vertical propre de chaque colonne */
 .col {
@@ -279,6 +315,7 @@ body {
   gap: 16px; /* ou le gap déjà utilisé dans ton layout */
 }
 
+
 /* Aperçu compact dans le Panel LLM PSY */
 .psy-card-preview {
   display: flex;
@@ -286,12 +323,14 @@ body {
   gap: 10px;
 }
 
+
 .psy-preview-text {
   font-size: 0.8rem;
   color: #7ab3cc;
   margin: 0;
   line-height: 1.35;
 }
+
 
 .psy-open-btn {
   background: rgba(0, 235, 255, 0.08);
@@ -307,11 +346,13 @@ body {
   width: 100%;
 }
 
+
 .psy-open-btn:hover {
   background: #00ebff;
   color: #020b14;
   box-shadow: 0 0 10px rgba(0, 235, 255, 0.4);
 }
+
 
 /* Permet au panneau de s'adapter automatiquement au contenu sans déborder */
 .psy-card-preview {
@@ -321,6 +362,7 @@ body {
   box-sizing: border-box;
 }
 
+
 /* Fixe le bouton à l'intérieur des bordures du panel */
 .psy-open-btn {
   width: 100%;
@@ -328,6 +370,7 @@ body {
   margin-top: 4px;
   padding: 8px 12px;
 }
+
 
 /* Si ton composant Panel a une hauteur rigide, laisse-le s'étirer */
 .col > div,
