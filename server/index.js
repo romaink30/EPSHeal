@@ -8,7 +8,6 @@ app.use(cors());
 app.use(express.json());
 
 // Classe une mesure vitale : normal / à surveiller / critique.
-// Seuils de démonstration, à ajuster avec un vrai avis médical.
 function classify(measure) {
   if (!measure) return 'normal';
   const fc = measure.frequence_cardiaque;
@@ -18,8 +17,7 @@ function classify(measure) {
   return 'normal';
 }
 
-// POST /api/login  { code }
-// "code" = texte décodé du QR (le login du patient ou du médecin)
+// POST /api/login { code }
 app.post('/api/login', async (req, res) => {
   const { code } = req.body || {};
   if (!code) return res.status(400).json({ error: 'code manquant' });
@@ -49,6 +47,7 @@ app.post('/api/login', async (req, res) => {
         sexe: p.sexe,
         maladie: p.maladie_rythme_cardiaque,
         dateDiagnostic: p.date_diagnostic,
+        etat: p.etat || 'normal', // <-- AJOUTÉ ICI POUR LE PATIENT CONNECTÉ
       });
     }
 
@@ -59,19 +58,18 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// GET /api/patients — liste complète pour la vue médecin, avec la
-// dernière mesure vitale de chacun et un statut calculé.
+// GET /api/patients — liste complète pour la vue médecin
 app.get('/api/patients', async (req, res) => {
   try {
     const [rows] = await pool.query(`
-      SELECT p.id, p.nom, p.prenom, p.maladie_rythme_cardiaque, p.date_diagnostic,
+      SELECT p.id, p.nom, p.prenom, p.maladie_rythme_cardiaque, p.date_diagnostic, p.etat,
              m.frequence_cardiaque, m.spo2, m.tension_systolique, m.tension_diastolique, m.date_mesure
       FROM patients p
       LEFT JOIN mesures_vitales m ON m.id = (
         SELECT id FROM mesures_vitales WHERE patient_id = p.id ORDER BY date_mesure DESC LIMIT 1
       )
       ORDER BY p.nom, p.prenom
-    `);
+    `); // <-- p.etat A ÉTÉ RAJOUTÉ DANS LE SELECT CI-DESSUS
 
     const patients = rows.map((r) => ({
       id: r.id,
@@ -79,6 +77,7 @@ app.get('/api/patients', async (req, res) => {
       prenom: r.prenom,
       maladie: r.maladie_rythme_cardiaque,
       dateDiagnostic: r.date_diagnostic,
+      etat: r.etat || 'normal', // <-- TRANSMIS AU FRONT REACT
       derniereMesure: r.date_mesure
         ? {
             frequenceCardiaque: r.frequence_cardiaque,
@@ -100,8 +99,7 @@ app.get('/api/patients', async (req, res) => {
   }
 });
 
-// GET /api/patients/:id — fichier complet d'un patient (utilisé par la
-// vue médecin ET par le patient lui-même pour son propre dossier).
+// GET /api/patients/:id — fichier complet d'un patient
 app.get('/api/patients/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -123,6 +121,7 @@ app.get('/api/patients/:id', async (req, res) => {
       sexe: p.sexe,
       maladie: p.maladie_rythme_cardiaque,
       dateDiagnostic: p.date_diagnostic,
+      etat: p.etat || 'normal', // <-- AJOUTÉ ICI AUSSI
       mesures: mesures.map((m) => ({
         date: m.date_mesure,
         frequenceCardiaque: m.frequence_cardiaque,

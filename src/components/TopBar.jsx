@@ -1,4 +1,6 @@
-function TopBar({ missionName, destination, sol, online, onLogout }) {
+function TopBar({ missionName, destination, sol, online, onLogout, etat }) {
+  const isQuarantine = etat === 'quarantaine';
+
   return (
     <header className="topbar">
       <div className="brand">
@@ -9,8 +11,23 @@ function TopBar({ missionName, destination, sol, online, onLogout }) {
       </div>
       <div className="status" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <div>
-          <span className="dot" />
-          {online ? 'Liaison biomédicale active' : 'Liaison biomédicale coupée'}
+          <span
+            className="dot"
+            style={
+              isQuarantine
+                ? { backgroundColor: '#ff4d4f', boxShadow: '0 0 8px #ff4d4f' }
+                : undefined
+            }
+          />
+          {isQuarantine ? (
+            <span style={{ color: '#ff4d4f', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+              ⚠️ PROTOCOLE QUARANTAINE ACTIF
+            </span>
+          ) : online ? (
+            'Liaison biomédicale active'
+          ) : (
+            'Liaison biomédicale coupée'
+          )}
         </div>
 
         {onLogout && (
