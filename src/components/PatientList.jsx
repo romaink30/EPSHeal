@@ -192,7 +192,7 @@ function PatientList({ patients, selectedId, onSelect }) {
               lineHeight: '1.4',
             }}
           >
-            Seuil critique de 15 % dépassé : <strong>{quarantineCount}</strong> membres d'équipage placés en confinement caisson[cite: 3]. Sas communs verrouillés.
+            Seuil critique de 15 % dépassé : <strong>{quarantineCount}</strong> membres d'équipage placés en confinement caisson. Sas communs verrouillés.
           </p>
         </div>
       )}

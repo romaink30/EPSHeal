@@ -10,6 +10,7 @@ import LlmPsy from './components/LlmPsy';
 import ToWatch from './components/ToWatch';
 import SleepCycle from './components/SleepCycle';
 import DoctorDashboard from './components/DoctorDashboard';
+import QuarantineAlert from './components/QuarantineAlert';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -102,6 +103,8 @@ function App() {
 
   return (
     <div className="app">
+      {currentUser.etat === 'quarantaine' && <QuarantineAlert patientName={firstName} />}
+
       <TopBar
         missionName={mission.name}
         destination={mission.destination}
