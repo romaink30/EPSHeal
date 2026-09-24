@@ -3,15 +3,10 @@ import Panel from './Panel';
 function EpidemicPanel({ patients = [] }) {
   const total = patients.length;
 
-  // Calcul basé UNIQUEMENT sur les patients marqués en "quarantaine"
   const quarantinedPatients = patients.filter((p) => p.etat === 'quarantaine');
   const quarantineCount = quarantinedPatients.length;
   const percent = total > 0 ? Math.round((quarantineCount / total) * 100) : 0;
-
-  // Seuil d'alerte (par exemple alerte si >= 15%)
   const isCrisis = percent >= 15;
-
-  // Cas hémodynamiques critiques pour la liste juste en dessous
   const criticalCases = patients.filter((p) => p.statut === 'critical');
 
   return (
