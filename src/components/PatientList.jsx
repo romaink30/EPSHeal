@@ -24,7 +24,16 @@ function PatientList({ patients, selectedId, onSelect }) {
           {sortedPatients.map((p) => {
             const isQ = p.etat === 'quarantaine';
             const isSelected = p.id === selectedId;
-            const isRas = !isQ && p.statut !== 'critical' && p.statut !== 'watch';
+            // "critique" reste basé sur les vraies mesures vitales : un
+            // médecin ne doit pas pouvoir masquer une urgence réelle juste
+            // en repassant le statut manuel à RAS.
+            const isCriticalAuto = !isQ && p.statut === 'critical';
+            // "à surveiller" et "R.A.S" suivent désormais uniquement le
+            // choix manuel du médecin (etat), pour qu'il puisse effectivement
+            // remettre un patient à RAS même si ses dernières mesures le
+            // classaient "watch" automatiquement.
+            const isWatch = !isQ && !isCriticalAuto && p.etat === 'a_surveiller';
+            const isRas = !isQ && !isCriticalAuto && !isWatch && p.etat === 'normal';
 
             return (
               <li key={p.id} style={{ marginBottom: '6px' }}>
@@ -81,7 +90,7 @@ function PatientList({ patients, selectedId, onSelect }) {
                         quarantaine
                       </span>
                     )}
-                    {p.statut === 'critical' && !isQ && (
+                    {isCriticalAuto && (
                       <span
                         style={{
                           background: 'rgba(255, 77, 79, 0.2)',
@@ -95,7 +104,7 @@ function PatientList({ patients, selectedId, onSelect }) {
                         critique
                       </span>
                     )}
-                    {p.statut === 'watch' && !isQ && (
+                    {isWatch && (
                       <span
                         style={{
                           background: 'rgba(250, 173, 20, 0.15)',

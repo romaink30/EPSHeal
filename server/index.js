@@ -137,5 +137,26 @@ app.get('/api/patients/:id', async (req, res) => {
   }
 });
 
+// PATCH /api/patients/:id/statut — le médecin change l'état d'un patient
+// (normal / a_surveiller / quarantaine).
+app.patch('/api/patients/:id/statut', async (req, res) => {
+  const { id } = req.params;
+  const { statut } = req.body || {};
+  const valides = ['normal', 'a_surveiller', 'quarantaine'];
+
+  if (!valides.includes(statut)) {
+    return res.status(400).json({ error: 'Statut invalide' });
+  }
+
+  try {
+    const [result] = await pool.query('UPDATE patients SET etat = ? WHERE id = ?', [statut, id]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Patient introuvable' });
+    res.json({ id: Number(id), etat: statut });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`API EPSHeal sur http://localhost:${port}`));

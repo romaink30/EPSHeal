@@ -24,3 +24,15 @@ export async function fetchPatientDetail(id) {
   if (!res.ok) throw new Error('Erreur de chargement du dossier');
   return res.json();
 }
+export async function updatePatientStatus(id, statut) {
+  const res = await fetch(`${API_BASE}/api/patients/${id}/statut`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ statut }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || 'Erreur lors de la mise à jour du statut');
+  }
+  return res.json();
+}

@@ -980,3 +980,59 @@
     animation: none;
   }
 }
+/* ---------- Carte de changement rapide de statut ---------- */
+.quick-status-name {
+  font-size: 13.5px;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.quick-status-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.quick-status-success {
+  color: var(--ok);
+  margin-top: 8px;
+}
+/* ---------- Sélecteur d'état patient ---------- */
+.status-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  background-color: rgba(0, 229, 255, 0.05);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%2300e5ff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 11px 7px;
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 10px 34px 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.status-select:hover {
+  border-color: var(--cyan-dim);
+  background-color: rgba(0, 229, 255, 0.09);
+}
+.status-select:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px var(--cyan), 0 0 10px rgba(0, 229, 255, 0.35);
+}
+.status-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.status-select option {
+  background: #060b14;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: normal;
+}
