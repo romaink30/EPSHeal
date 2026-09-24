@@ -15,11 +15,7 @@ function DoctorDashboard({ currentUser }) {
     fetchPatients()
       .then((data) => {
         setPatients(data);
-        if (data.length > 0) {
-          // Priorité au premier patient en quarantaine s'il y en a un, sinon le premier de la liste
-          const priorityPatient = data.find((p) => p.etat === 'quarantaine') || data[0];
-          setSelectedId(priorityPatient.id);
-        }
+        if (data.length > 0) setSelectedId(data[0].id);
       })
       .catch((err) => setError(err.message));
   }, []);
@@ -28,22 +24,17 @@ function DoctorDashboard({ currentUser }) {
   const currentSelectedPatient = patients.find((p) => p.id === selectedId);
 
   // Formatage des données envoyées à l'IA avec le contexte du patient ciblé
-  const isQuarantine = currentSelectedPatient?.etat === 'quarantaine';
-
   const patientContextForLlm = currentSelectedPatient
     ? {
         id: currentSelectedPatient.login || currentSelectedPatient.id,
         prenom: currentSelectedPatient.prenom,
         nom: currentSelectedPatient.nom,
         role: 'Patient',
-        etat: currentSelectedPatient.etat || 'normal',
-        statut: isQuarantine ? 'urgence - quarantaine' : currentSelectedPatient.statut === 'critical' ? 'urgence' : 'stable',
+        statut: currentSelectedPatient.statut === 'critical' ? 'urgence' : 'stable',
         antecedents: currentSelectedPatient.maladie
           ? `${currentSelectedPatient.maladie} (diagnostiqué le ${currentSelectedPatient.dateDiagnostic})`
           : 'Aucun antécédent notable.',
-        observations: isQuarantine
-          ? 'ALERTE CONTAGION : Protocole d’isolement actif. Dégradation des fonctions respiratoires et thermiques.'
-          : currentSelectedPatient.maladie || 'Aucune observation enregistrée.',
+        observations: currentSelectedPatient.maladie || 'Aucune observation enregistrée.',
         dateDiagnostic: currentSelectedPatient.dateDiagnostic || 'N/A',
         constantes: currentSelectedPatient.derniereMesure
           ? {
@@ -52,15 +43,13 @@ function DoctorDashboard({ currentUser }) {
               tension: `${currentSelectedPatient.derniereMesure.tensionSystolique}/${currentSelectedPatient.derniereMesure.tensionDiastolique}`,
             }
           : { pouls: '--', spo2: 'N/A', tension: 'N/A' },
-        notesPsy: isQuarantine
-          ? 'Dossier prioritaire : risque de détresse psychologique liée au confinement en caisson de repos.'
-          : 'Consultation dossier par médecin référent.',
+        notesPsy: 'Consultation dossier par médecin référent.',
       }
     : null;
 
   return (
     <main className="grid doctor-grid">
-      {/* Colonne 1 : Profil médecin & Liste des patients avec alerte de crise et tri prioritaire */}
+      {/* Colonne 1 : Profil médecin & Liste des patients */}
       <section className="col">
         <IdentityCard
           name={`Dr ${currentUser.prenom || currentUser.firstName || ''} ${currentUser.nom || currentUser.lastName || ''}`}
