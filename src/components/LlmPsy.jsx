@@ -26,7 +26,7 @@ Directives :
 - Utilise [URGENCE_CRITIQUE] uniquement en cas de risque suicidaire ou mise en péril de la mission.`;
 };
 
-function LlmPsy({ patientActuel = null, isDoctor = false, onUrgenceDeclenchee }) {
+function LlmPsy({ patientActuel = null, isDoctor = false, onUrgenceDeclenchee, allPatients = [] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Détection du mode praticien via la prop ou le rôle
@@ -110,10 +110,25 @@ function LlmPsy({ patientActuel = null, isDoctor = false, onUrgenceDeclenchee })
 - Notes psychologiques : ${patientActuel.notesPsy || 'Non renseigné'}`;
     }
 
+          let contexteEquipage = '';
+      if (isMedecinMode && allPatients.length > 0) {
+        contexteEquipage = `
+
+  [VUE D'ENSEMBLE ÉQUIPAGE — ${allPatients.length} patients]
+  ${allPatients
+    .map((p) => {
+      const m = p.derniereMesure;
+      return `- ${p.prenom} ${p.nom} (#${p.id}) — ${p.maladie || 'aucun antécédent'} — statut: ${p.statut}${
+        m ? ` — FC ${m.frequenceCardiaque} bpm, SpO2 ${m.spo2}%` : ''
+      }`;
+    })
+    .join('\n')}`;
+      }
+
     const systemPromptActif = getSystemPrompt(isMedecinMode, getPatientFullName());
 
     const conversationOllama = [
-      { role: 'system', content: `${systemPromptActif}\n${contexteBiomedical}` },
+      { role: 'system', content: `${systemPromptActif}\n${contexteBiomedical}${contexteEquipage}` },
       ...messages.map((m) => ({
         role: m.from === 'ia' ? 'assistant' : 'user',
         content: m.text,

@@ -30,9 +30,19 @@ function DoctorDashboard({ currentUser }) {
         prenom: currentSelectedPatient.prenom,
         nom: currentSelectedPatient.nom,
         role: 'Patient',
-        statut: 'Dossier sous revue médicale',
-        observations: currentSelectedPatient.maladie_rythme_cardiaque || 'Aucune observation enregistrée.',
-        dateDiagnostic: currentSelectedPatient.date_diagnostic || 'N/A',
+        statut: currentSelectedPatient.statut === 'critical' ? 'urgence' : 'stable',
+        antecedents: currentSelectedPatient.maladie
+          ? `${currentSelectedPatient.maladie} (diagnostiqué le ${currentSelectedPatient.dateDiagnostic})`
+          : 'Aucun antécédent notable.',
+        observations: currentSelectedPatient.maladie || 'Aucune observation enregistrée.',
+        dateDiagnostic: currentSelectedPatient.dateDiagnostic || 'N/A',
+        constantes: currentSelectedPatient.derniereMesure
+          ? {
+              pouls: currentSelectedPatient.derniereMesure.frequenceCardiaque,
+              spo2: `${currentSelectedPatient.derniereMesure.spo2}%`,
+              tension: `${currentSelectedPatient.derniereMesure.tensionSystolique}/${currentSelectedPatient.derniereMesure.tensionDiastolique}`,
+            }
+          : { pouls: '--', spo2: 'N/A', tension: 'N/A' },
         notesPsy: 'Consultation dossier par médecin référent.',
       }
     : null;
@@ -62,7 +72,7 @@ function DoctorDashboard({ currentUser }) {
 
       {/* Colonne 3 : Surveillance épidémique & Assistant IA */}
       <section className="col">
-        <LlmPsy patientActuel={patientContextForLlm} isDoctor={true} />
+        <LlmPsy patientActuel={patientContextForLlm} isDoctor={true} allPatients={patients} />
         <EpidemicPanel patients={patients} />
       </section>
     </main>
