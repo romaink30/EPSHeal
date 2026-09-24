@@ -79,7 +79,6 @@ function App() {
   const departureDate = currentUser.departureDate || crew.departureDate;
   const role = currentUser.role || 'Spécialiste de mission';
   const grade = currentUser.grade || '';
-  const etat = currentUser.etat || 'normal';
 
   const patientData = {
     id: activeId,
@@ -87,8 +86,7 @@ function App() {
     nom: lastName,
     grade: grade,
     role: role,
-    etat: etat,
-    statut: etat === 'quarantaine' ? 'quarantaine' : 'stable',
+    statut: 'stable',
     constantes: {
       pouls: 72,
       rythme: 'Sinusal',
@@ -98,8 +96,8 @@ function App() {
     },
     antecedents: medicalHistory.join(' '),
     allergies: 'Aucune allergie connue.',
-    observations: etat === 'quarantaine' ? 'Isolement d’urgence actif.' : 'Densité osseuse en légère baisse.',
-    notesPsy: etat === 'quarantaine' ? 'Stress élevé — soutien d’isolement requis.' : 'Paramètres psychologiques stables.',
+    observations: 'Densité osseuse en légère baisse.',
+    notesPsy: 'Paramètres psychologiques stables.',
   };
 
   return (
@@ -110,7 +108,6 @@ function App() {
         sol={mission.sol}
         online={mission.online}
         onLogout={handleLogout}
-        etat={etat}
       />
 
       <main className="grid">
@@ -140,7 +137,7 @@ function App() {
         {/* Colonne droite */}
         <section className="col">
           <LlmPsy patientActuel={patientData} />
-          <ToWatch alerts={alerts} logEntries={logEntries} etat={etat} />
+          <ToWatch alerts={alerts} logEntries={logEntries} />
           <SleepCycle nights={sleepNights} average="6h48" target="7h00" />
         </section>
       </main>

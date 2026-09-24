@@ -46,9 +46,7 @@ function DoctorDashboard({ currentUser }) {
         antecedents: currentSelectedPatient.maladie
           ? `${currentSelectedPatient.maladie} (diagnostiqué le ${currentSelectedPatient.dateDiagnostic})`
           : 'Aucun antécédent notable.',
-        observations: isQuarantine
-          ? 'ALERTE CONTAGION : Protocole d’isolement actif. Dégradation des fonctions respiratoires et thermiques.'
-          : currentSelectedPatient.maladie || 'Aucune observation enregistrée.',
+        observations: currentSelectedPatient.maladie || 'Aucune observation enregistrée.',
         dateDiagnostic: currentSelectedPatient.dateDiagnostic || 'N/A',
         constantes: currentSelectedPatient.derniereMesure
           ? {
@@ -57,9 +55,7 @@ function DoctorDashboard({ currentUser }) {
               tension: `${currentSelectedPatient.derniereMesure.tensionSystolique}/${currentSelectedPatient.derniereMesure.tensionDiastolique}`,
             }
           : { pouls: '--', spo2: 'N/A', tension: 'N/A' },
-        notesPsy: isQuarantine
-          ? 'Dossier prioritaire : risque de détresse psychologique liée au confinement en caisson de repos.'
-          : 'Consultation dossier par médecin référent.',
+        notesPsy: 'Consultation dossier par médecin référent.',
       }
     : null;
 
@@ -67,7 +63,7 @@ function DoctorDashboard({ currentUser }) {
 
   return (
     <main className="grid doctor-grid">
-      {/* Colonne 1 : Profil médecin & Liste des patients avec alerte de crise et tri prioritaire */}
+      {/* Colonne 1 : Profil médecin & Liste des patients */}
       <section className="col">
         <IdentityCard
           name={`Dr ${currentUser.prenom || currentUser.firstName || ''} ${currentUser.nom || currentUser.lastName || ''}`}
