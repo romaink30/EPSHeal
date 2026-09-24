@@ -50,29 +50,36 @@ function LlmPsy({ patientActuel = null, isDoctor = false, onUrgenceDeclenchee, a
       : `EPSHEAL en ligne. Bonjour ${nomPatient}. Comment vous sentez-vous ?`;
   };
 
-  const [messages, setMessages] = useState([
-    {
-      from: 'ia',
-      text: getInitialGreeting(),
-      isUrgent: false,
-    },
-  ]);
+  // Clé qui identifie le patient courant : chaque patient a son propre fil
+  // de conversation, conservé dans "conversations" tant que le composant
+  // reste monté (donc tant que le médecin reste sur son portail).
+  const patientKey = patientActuel?.id ?? patientActuel?.login ?? 'inconnu';
+
+  const buildInitialThread = () => [
+    { from: 'ia', text: getInitialGreeting(), isUrgent: patientActuel?.statut === 'urgence' },
+  ];
+
+  const [conversations, setConversations] = useState({});
+
+  // Le fil affiché : celui déjà stocké pour ce patient, ou un fil neuf
+  // avec le message d'accueil si c'est la première fois qu'on le consulte.
+  const messages = conversations[patientKey] ?? buildInitialThread();
+
+  const updateMessages = (updater) => {
+    setConversations((prev) => {
+      const current = prev[patientKey] ?? buildInitialThread();
+      const next = typeof updater === 'function' ? updater(current) : updater;
+      return { ...prev, [patientKey]: next };
+    });
+  };
+
   const [draft, setDraft] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isAlertActive, setIsAlertActive] = useState(patientActuel?.statut === 'urgence');
   const threadEndRef = useRef(null);
 
-  // Mise à jour automatique de l'accueil au changement de patient ou de mode
-  useEffect(() => {
-    setMessages([
-      {
-        from: 'ia',
-        text: getInitialGreeting(),
-        isUrgent: patientActuel?.statut === 'urgence',
-      },
-    ]);
-    setIsAlertActive(patientActuel?.statut === 'urgence');
-  }, [patientActuel?.id, isDoctor]);
+  // L'alerte reflète soit un message urgent déjà présent dans le fil de ce
+  // patient, soit son statut de base si aucune conversation n'a encore eu lieu.
+  const isAlertActive = messages.some((m) => m.isUrgent) || patientActuel?.statut === 'urgence';
 
   // Défilement automatique dans la modale
   useEffect(() => {
@@ -94,7 +101,7 @@ function LlmPsy({ patientActuel = null, isDoctor = false, onUrgenceDeclenchee, a
     const text = draft.trim();
     if (!text || loading) return;
 
-    setMessages((prev) => [...prev, { from: 'user', text }]);
+    updateMessages((prev) => [...prev, { from: 'user', text }]);
     setDraft('');
     setLoading(true);
 
@@ -110,20 +117,20 @@ function LlmPsy({ patientActuel = null, isDoctor = false, onUrgenceDeclenchee, a
 - Notes psychologiques : ${patientActuel.notesPsy || 'Non renseigné'}`;
     }
 
-          let contexteEquipage = '';
-      if (isMedecinMode && allPatients.length > 0) {
-        contexteEquipage = `
+    let contexteEquipage = '';
+    if (isMedecinMode && allPatients.length > 0) {
+      contexteEquipage = `
 
-  [VUE D'ENSEMBLE ÉQUIPAGE — ${allPatients.length} patients]
-  ${allPatients
-    .map((p) => {
-      const m = p.derniereMesure;
-      return `- ${p.prenom} ${p.nom} (#${p.id}) — ${p.maladie || 'aucun antécédent'} — statut: ${p.statut}${
-        m ? ` — FC ${m.frequenceCardiaque} bpm, SpO2 ${m.spo2}%` : ''
-      }`;
-    })
-    .join('\n')}`;
-      }
+[VUE D'ENSEMBLE ÉQUIPAGE — ${allPatients.length} patients]
+${allPatients
+  .map((p) => {
+    const m = p.derniereMesure;
+    return `- ${p.prenom} ${p.nom} (#${p.id}) — ${p.maladie || 'aucun antécédent'} — statut: ${p.statut}${
+      m ? ` — FC ${m.frequenceCardiaque} bpm, SpO2 ${m.spo2}%` : ''
+    }`;
+  })
+  .join('\n')}`;
+    }
 
     const systemPromptActif = getSystemPrompt(isMedecinMode, getPatientFullName());
 
@@ -154,18 +161,12 @@ function LlmPsy({ patientActuel = null, isDoctor = false, onUrgenceDeclenchee, a
       const estUrgent = rawText.includes('[URGENCE_CRITIQUE]');
       const cleanText = rawText.replace(/\[URGENCE_CRITIQUE\]/g, '').trim();
 
-      if (estUrgent) {
-        setIsAlertActive(true);
-        if (onUrgenceDeclenchee) onUrgenceDeclenchee(cleanText);
-      }
+      if (estUrgent && onUrgenceDeclenchee) onUrgenceDeclenchee(cleanText);
 
-      setMessages((prev) => [
-        ...prev,
-        { from: 'ia', text: cleanText, isUrgent: estUrgent },
-      ]);
+      updateMessages((prev) => [...prev, { from: 'ia', text: cleanText, isUrgent: estUrgent }]);
     } catch (err) {
       console.error('Erreur Ollama :', err);
-      setMessages((prev) => [
+      updateMessages((prev) => [
         ...prev,
         {
           from: 'ia',
